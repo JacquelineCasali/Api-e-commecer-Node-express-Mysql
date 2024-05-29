@@ -1,0 +1,13 @@
+1 produto possui n pedidos 1:n
+
+relacionamento 
+1:1 
+1:n 
+tabela pivo n:n
+
+loja_produto nao precisa criar model
+lojaId
+produtoId
+
+
+
