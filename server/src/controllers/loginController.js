@@ -1,4 +1,4 @@
-const mysql = require("../db/config/config").pool;
+const mysql = require("../db/config/config")
 // criptografar senha
 const bcrypt = require("../middleware/bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,22 +7,16 @@ const loginController = {
   //cadastrar
   login: async (req, res) => {
     // receber dados enviados no corpo
-    // try{
+     try{
     const { email, senha } = req.body;
 
     // cadastrar no banco de dados
-    mysql.getConnection((error, conn) => {
-      if (error) {
-        return res.status(500).send({ error: error });
-      }
       // verificando se o email já existe
       const query = `SELECT * FROM usuarios WHERE email=?`;
 
-      conn.query(query, [email], (error, resultado, field) => {
-        conn.release();
-        if (error) {
-          return res.status(500).send({ error: error });
-        }
+      const resultado = await mysql.execute(query, [email],)
+        
+       
         //verificando se tem registro
         if (resultado.length < 1) {
           return res.status(401).send({
@@ -48,8 +42,10 @@ const loginController = {
             .send({ messagem: "Autenticado com sucesso", token: token });
         }
         return res.status(401).send({ messagem: "Falha na autenticação" });
-      });
-    });
-  },
-};
+      
+    } catch (error) {
+      return res.status(500).send({ error: error });
+    }
+    }
+  }
 module.exports = loginController;

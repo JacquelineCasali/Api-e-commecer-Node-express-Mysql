@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+<body>
+    
+    
+    
+    <h1 id="b">
+        Baixar Item
+    </h1>
+    <label for="">Escolha um arquivo</label>
+    <input type="file" id="arquivos">
+    <br>
+<iframe src="" frameborder="0"></iframe>
+    <textarea  rows="8" cols="50" id="preview"></textarea>
+<br>    
+    
+<button id="baixar">Donwload</button>
+
+<script>
+    function baixarItem(){
+        let b= document.createElement("iframe")
+b.setAttribute("src","http://localhost:3000/do")
+console.log(b)
+document.querySelector('#baixar')
+.appendChild(b)
+.setAttribute('style',"display:none")
+}
+</script>
+
+<script src="file.js">
+
+</script>
+</body>
+</html>

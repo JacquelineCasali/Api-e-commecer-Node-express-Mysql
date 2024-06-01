@@ -2,8 +2,9 @@
 // Upload de arquivos
 const multer  = require('multer');
 const crypto=require("crypto");
+const {existsSync, mkdirSync} =require('fs') 
 const path=require('path')
-
+const diretorio=path.join(__dirname,'..','..','uploads')
 
 // Realizar upload da imagem
 module.exports = (multer({
@@ -15,6 +16,9 @@ module.exports = (multer({
         // Local para salvar a imagem
         destination: (req, file, cb) => {
             cb(null, './uploads/')
+            if(!existsSync(diretorio)){
+                mkdirSync(diretorio)
+            }
         },
 
         // Nome que deve ser atribuido ao arquivo

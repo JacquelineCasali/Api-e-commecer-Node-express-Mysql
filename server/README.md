@@ -2,7 +2,7 @@ COMO RODAR O PROJETO BAIXADO
 Instalar todas as dependencias indicada pelo package.json
 ### npm install
 
-Criar a base de dados "celke" no MySQL
+Criar a base de dados "estoque" no MySQL
 Alterar as credencias do banco de dados no arquivo ".env"
 
 Executar as migrations

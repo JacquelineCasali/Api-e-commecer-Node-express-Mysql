@@ -5,7 +5,7 @@ const bodyParser=require('body-parser')
 const path=require('path')
 const morgan = require("morgan");
 const app = express();
-//const ola =require('./uploads')
+
 const produtoRoutes=require('./src/routes/produtoRoutes')
 const pedidosRoutes=require('./src/routes/pedidosRoutes')
 const usuariosRoutes=require('./src/routes/usuariosRoutes')
@@ -29,9 +29,33 @@ res.header('Origin','X-Requested-With','Content-Type','Accept','Authorization')
  next();
 })
 
+// app.get('/do',(req,res)=>{
+
+// var path = require('path')
+// var file=path.join(__dirname,'./dae.pdf')
+//     //res.json({message:"testando"})
+//  res.download(file,function(err){
+// if(err){
+//   console.log(err)
+// }else{
+//   console.log('sucesso')
+// }
+// })
+  
+ 
+// })
+
+
+
+
+
+
 app.use("/produtos",produtoRoutes);
 app.use("/pedidos",pedidosRoutes);
 app.use("/",usuariosRoutes);
+
+
+
 
 // quando não encontra a rota
 app.use((req,res,next)=>{

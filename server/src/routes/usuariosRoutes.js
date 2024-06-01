@@ -1,7 +1,10 @@
 const express = require("express");
 const usuariosControllers = require("../controllers/usuariosControllers");
 const loginController = require("../controllers/loginController");
+const dowloadController = require("../controllers/dowloadController");
 const router = express.Router();
+
+router.get('/do',dowloadController.dowload)
 
 
  router.post('/',usuariosControllers.criar)
