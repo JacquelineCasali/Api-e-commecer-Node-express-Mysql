@@ -8,9 +8,32 @@ const productControllers = {
   listar: async (req, res) => {
     // try catch trata o error
     try {
-      const resultado = await mysql.execute("SELECT * FROM products;");
+      const { categoryId } = req.query;
+      let name = '';
+      if (req.query.name) {
+          name = req.query.name;    
+      }
+//colocando o filtro por categoria
+//% % busca por qualquer parte da palavra
+  
 
-      const response = {
+const query = `
+SELECT *
+   FROM products
+  WHERE categoryId = ?
+    AND (
+        name LIKE '%${name}%'
+    );
+`;
+
+
+     
+      const resultado = await mysql.execute(query,[categoryId]);
+console.log(resultado)
+    
+
+
+const response = {
         quantidade: resultado.length,
         product: resultado.map((prod) => {
           return {
@@ -18,7 +41,7 @@ const productControllers = {
             name: prod.name,
             price: prod.price,
             image: process.env.URL_ADM + prod.image,
-
+categoryId:prod.categoryId,
             request: {
               type: "Get",
               descricao: "Retorna o detalhe do produto",
@@ -27,6 +50,14 @@ const productControllers = {
           };
         }),
       };
+
+      if (resultado.length == 0) {
+        return res.status(404).send({
+          message: `Não foi encontrado produto nessa categoria ${categoryId} e com esse nome ${name}`,
+        });
+      }
+
+
       return res.status(200).send(response);
     } catch (error) {
       return res.status(500).send({ error: error });
@@ -35,7 +66,7 @@ const productControllers = {
   criar: async (req, res) => {
     // receber dados enviados no corpo
     try {
-      const { name, price } = req.body;
+      const { name, price, categoryId } = req.body;
       const { image } = req.file;
       console.log(req.file);
       console.log(req.user);
@@ -50,8 +81,8 @@ const productControllers = {
         });
       } else {
         var resultado =await mysql.execute(
-          "INSERT INTO products(name, price,image) VALUES (?,?,?)",
-          [name, price, image]
+          "INSERT INTO products(name, price,image,categoryId) VALUES (?,?,?,?)",
+          [name, price, image,categoryId]
         );
         const response = {
           message: "Produto Criado com sucesso",
@@ -61,6 +92,7 @@ const productControllers = {
             name,
             price,
             image: process.env.URL_ADM + image,
+            categoryId:parseInt(categoryId),
             request: {
               type: "GET",
               descricao: "Retorna todos os produtos",
@@ -94,10 +126,11 @@ const productControllers = {
           name: resultado[0].name,
           price: resultado[0].price,
           image: process.env.URL_ADM + resultado[0].image,
+         
           request: {
             type: "Get",
             descricao: "Retorna o todos do Produto",
-            url: process.env.URL_ADM + "produtos",
+            url: process.env.URL_ADM + "produtos/",
           },
         },
       };

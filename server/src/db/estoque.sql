@@ -10,15 +10,15 @@ USE estoque;
 
 CREATE TABLE IF NOT EXISTS users (
     userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(100) unique,
-    password VARCHAR(255)
+    email VARCHAR(100) unique not null,
+    password VARCHAR(255) not null
 );
 
 CREATE TABLE IF NOT EXISTS products (
     productId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(45) unique NOT NULL,
     price FLOAT NOT NULL,
-    image VARCHAR(255)
+    image VARCHAR(255),
 );
 
 
@@ -37,9 +37,21 @@ CREATE TABLE IF NOT EXISTS productImages (
     FOREIGN KEY (productId) REFERENCES products (productId)
 );
 
+-- 1 para n
+CREATE TABLE IF NOT EXISTS categories (
+    categoryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL unique
+);
 
 
+-- alterando tabela de produtos  permite nulo
+ALTER TABLE products ADD categoryId INT null;
+insert into categories (name) values('material escolar')
 
+ALTER TABLE products ADD CONSTRAINT fk_product_category
+FOREIGN KEY (categoryId) REFERENCES categories(categoryId);
+
+ALTER TABLE products MODIFY categoryId INT NOT null;
 -- Ligação de tabelas
 -- ALTER TABLE `estoque`.`pedidos` 
 -- ADD CONSTRAINT `id`

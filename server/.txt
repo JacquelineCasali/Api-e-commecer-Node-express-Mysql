@@ -1,5 +1,5 @@
 1 produto possui n pedidos 1:n
-
+1 categoria possui n produtos
 relacionamento 
 1:1 
 1:n 

@@ -94,9 +94,9 @@ postImage: async (req, res) => {
         [imageId]
       );
          const response = {
-        messagem: "Imagem Deletada com Sucesso",
+        message: "Image Deletada com Sucesso",
         request: {
-            request: {
+         
                 type: 'POST',
                 descricao: 'Insere uma imagem',
                 url: process.env.URL_ADM + 'produtos/' + productId+ '/image',
@@ -107,8 +107,7 @@ postImage: async (req, res) => {
         
                   },
          
-            }
-        
+                 
         
         
            

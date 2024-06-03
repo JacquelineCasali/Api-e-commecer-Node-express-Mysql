@@ -10,6 +10,7 @@ const productRoutes=require('./src/routes/productRoutes')
 const ordersRoutes=require('./src/routes/ordersRoutes')
 const usersRoutes=require('./src/routes/usersRoutes')
 const imageRoutes=require('./src/routes/imageRoutes')
+const categoriesRoutes=require('./src/routes/categoriesRoutes')
 
 app.use(cors());
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 
 
 
+app.use("/categoria",categoriesRoutes);
 app.use("/produtos",imageRoutes);
 app.use("/produtos",productRoutes);
 app.use("/pedidos",ordersRoutes);
