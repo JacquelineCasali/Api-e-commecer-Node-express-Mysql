@@ -6,9 +6,10 @@ const path=require('path')
 const morgan = require("morgan");
 const app = express();
 
-const produtoRoutes=require('./src/routes/produtoRoutes')
-const pedidosRoutes=require('./src/routes/pedidosRoutes')
-const usuariosRoutes=require('./src/routes/usuariosRoutes')
+const productRoutes=require('./src/routes/productRoutes')
+const ordersRoutes=require('./src/routes/ordersRoutes')
+const usersRoutes=require('./src/routes/usersRoutes')
+const imageRoutes=require('./src/routes/imageRoutes')
 
 app.use(cors());
 app.use(express.json());
@@ -22,37 +23,26 @@ app.use(bodyParser.json());//apenas  json
 
 
 // cabeçalho
-app.use((req,res,next)=>{
-res.header('Origin','X-Requested-With','Content-Type','Accept','Authorization')
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+      'Access-Control-Allow-Header',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
 
-
- next();
-})
-
-// app.get('/do',(req,res)=>{
-
-// var path = require('path')
-// var file=path.join(__dirname,'./dae.pdf')
-//     //res.json({message:"testando"})
-//  res.download(file,function(err){
-// if(err){
-//   console.log(err)
-// }else{
-//   console.log('sucesso')
-// }
-// })
-  
- 
-// })
+  if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+      return res.status(200).send({});
+  }
+  next();
+});
 
 
 
-
-
-
-app.use("/produtos",produtoRoutes);
-app.use("/pedidos",pedidosRoutes);
-app.use("/",usuariosRoutes);
+app.use("/produtos",imageRoutes);
+app.use("/produtos",productRoutes);
+app.use("/pedidos",ordersRoutes);
+app.use("/",usersRoutes);
 
 
 

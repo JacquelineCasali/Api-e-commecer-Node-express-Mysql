@@ -32,7 +32,7 @@ module.exports = (multer({
                   }
     }),
 
-  //limites de uploads
+//   //limites de uploads
     limits: {
         //tamanho do arquivo
         fileSize: 2 * 1024 * 1024
@@ -51,5 +51,12 @@ module.exports = (multer({
 
         // Retornar FALSE quando a extensão da imagem é válida
         return cb(null, false);
+   
+   //varias imagens
+   
+   
+   
+   
+   
     }
 }))

@@ -2,27 +2,27 @@
 const mysql = require("../db/config/config");
 
 
-const produtosControllers = {
+const productControllers = {
 
 
   listar: async (req, res) => {
     // try catch trata o error
     try {
-      const resultado = await mysql.execute("SELECT * FROM produtos;");
+      const resultado = await mysql.execute("SELECT * FROM products;");
 
       const response = {
         quantidade: resultado.length,
-        produtos: resultado.map((prod) => {
+        product: resultado.map((prod) => {
           return {
-            id: prod.id,
-            nome: prod.nome,
-            preco: prod.preco,
+            productId: prod.productId,
+            name: prod.name,
+            price: prod.price,
             image: process.env.URL_ADM + prod.image,
 
             request: {
-              tipo: "Get",
-              descricao: "Retorna todos os produtos",
-              url: process.env.URL_ADM + "produtos/" + prod.id,
+              type: "Get",
+              descricao: "Retorna o detalhe do produto",
+              url: process.env.URL_ADM + "produtos/" + prod.productId,
             },
           };
         }),
@@ -35,33 +35,34 @@ const produtosControllers = {
   criar: async (req, res) => {
     // receber dados enviados no corpo
     try {
-      const { nome, preco } = req.body;
+      const { name, price } = req.body;
       const { image } = req.file;
       console.log(req.file);
       console.log(req.user);
       // cadastrar no banco de dados
       var resultado = await mysql.execute(
-        "SELECT * FROM produtos WHERE nome=?;",
-        [nome]
+        "SELECT * FROM products WHERE name=?;",
+        [name]
       );
       if (resultado.length > 0) {
         return res.status(409).send({
-          messagem: `Produto ${nome} já cadastrado`,
+          message: `Produto ${name} já cadastrado`,
         });
       } else {
-        var resultado = mysql.execute(
-          "INSERT INTO produtos(nome, preco,image) VALUES (?,?,?)",
-          [nome, preco, image]
+        var resultado =await mysql.execute(
+          "INSERT INTO products(name, price,image) VALUES (?,?,?)",
+          [name, price, image]
         );
         const response = {
-          messagem: "Produto Criado com sucesso",
-          produtoCriado: {
-            id: resultado.id,
-            nome,
-            preco,
+          message: "Produto Criado com sucesso",
+          createdProduct: {
+            //productId: resultado.insertproductId,
+            productId: resultado.insertId,
+            name,
+            price,
             image: process.env.URL_ADM + image,
             request: {
-              tipo: "POST",
+              type: "GET",
               descricao: "Retorna todos os produtos",
               url: process.env.URL_ADM + "produtos/",
             },
@@ -77,25 +78,25 @@ const produtosControllers = {
 
   ler: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { productId } = req.params;
       const resultado = await mysql.execute(
-        "SELECT * FROM produtos WHERE id=?;",
-        [id]
+        "SELECT * FROM products WHERE productId=?;",
+        [productId]
       );
       if (resultado.length == 0) {
         return res.status(404).send({
-          messagem: `Não foi encontrado produto com esse Id= ${id}`,
+          message: `Não foi encontrado produto com esse Id= ${productId}`,
         });
       }
       const response = {
-        produto: {
-          id: resultado[0].id,
-          nome: resultado[0].nome,
-          preco: resultado[0].preco,
+        product: {
+          productId: resultado[0].productId,
+          name: resultado[0].name,
+          price: resultado[0].price,
           image: process.env.URL_ADM + resultado[0].image,
           request: {
-            tipo: "Get",
-            descricao: "Retorna o Detalhe do Produto",
+            type: "Get",
+            descricao: "Retorna o todos do Produto",
             url: process.env.URL_ADM + "produtos",
           },
         },
@@ -109,27 +110,27 @@ const produtosControllers = {
 
   update: async (req, res) => {
     try {
-      const { nome, preco } = req.body;
+      const { name, price } = req.body;
       const { image } = req.file;
-      const { id } = req.params;
+      const { productId } = req.params;
       // cadastrar no banco de dados
       await mysql.execute(
-        `UPDATE produtos
-   SET nome=?, preco=?,image=? WHERE id=?`,
-        [nome, preco, image, id]
+        `UPDATE products
+   SET name=?, price=?,image=? WHERE productId=?`,
+        [name, price, image, productId]
       );
 
       const response = {
-        messagem: "Produto Atualizado com Sucesso",
-        produtoAtualizado: {
-          id,
-          nome,
-          preco,
+        message: "Produto Atualizado com Sucesso",
+        upatedProduct: {
+          productId:parseInt(productId),
+          name,
+          price,
           image: process.env.URL_ADM + image,
           request: {
-            tipo: "PUT",
+            type: "PUT",
             descricao: "Retorna o detalhe do produto",
-            url: process.env.URL_ADM + "produtos/" + id,
+            url: process.env.URL_ADM + "produtos/" + productId,
           },
         },
       };
@@ -142,12 +143,27 @@ const produtosControllers = {
 
   delete: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { productId } = req.params;
+     
+      const resultado = await mysql.execute(
+        "SELECT * FROM products WHERE productId=?;",
+        [productId],
+      );
+      if (resultado.length == 0) {
+        return res.status(404).send({
+          message: `Não foi encontrado produto com esse Id= ${productId}`,
+        });
+      }else{
+     
+     
+     
+     
+     
       // cadastrar no banco de dados
       await mysql.execute(
-        `DELETE FROM produtos
-      WHERE id=?`,
-        [id]
+        `DELETE FROM products
+      WHERE productId=?`,
+        [productId]
       );
 
       const response = {
@@ -165,10 +181,15 @@ const produtosControllers = {
       };
 
       res.status(202).send(response);
+    }
     } catch (error) {
       return res.status(500).send({ error: error });
     }
   },
+
+
+
+
 };
 
-module.exports = produtosControllers;
+module.exports = productControllers;

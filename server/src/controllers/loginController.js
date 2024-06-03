@@ -8,11 +8,11 @@ const loginController = {
   login: async (req, res) => {
     // receber dados enviados no corpo
      try{
-    const { email, senha } = req.body;
+    const { email, password } = req.body;
 
     // cadastrar no banco de dados
       // verificando se o email já existe
-      const query = `SELECT * FROM usuarios WHERE email=?`;
+      const query = `SELECT * FROM users WHERE email=?`;
 
       const resultado = await mysql.execute(query, [email],)
         
@@ -23,14 +23,14 @@ const loginController = {
             messagem: "Falha na autenticação",
           });
         }
-        const userSenha = bcrypt.compareHash(senha, resultado[0].senha);
+        const userSenha = bcrypt.compareHash(password, resultado[0].password);
 
         if (!userSenha) {
           return res.status(401).json({ message: `Falha na autenticação ` });
         }
         if (userSenha) {
           const token = jwt.sign(
-            { id: resultado[0].id, email: resultado[0].email },
+            { userId: resultado[0].userId, email: resultado[0].email },
 
             process.env.APP_SECRET,
 

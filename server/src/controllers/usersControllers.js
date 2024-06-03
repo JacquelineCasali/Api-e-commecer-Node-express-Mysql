@@ -2,23 +2,23 @@ const mysql = require("../db/config/config");
 // criptografar senha
 const bcrypt = require("../middleware/bcrypt");
 
-const usuariosControllers = {
+const usersControllers = {
   //criar listar imagem
   listar: async (req, res) => {
     try {
-      const resultado = await mysql.execute("SELECT * FROM usuarios");
+      const resultado = await mysql.execute("SELECT * FROM users");
 
       const response = {
         quantidadedeUsuarios: resultado.length,
-        usuarios: resultado.map((user) => {
+        users: resultado.map((user) => {
           return {
-            id: user.id,
+            userId: user.userId,
             email: user.email,
 
             request: {
-              tipo: "Get",
-              descricao: "Retorna todos os usuarios",
-              url: process.env.URL_ADM + user.id,
+              type: "Get",
+              descricao: "Retorna o detalhe dos usuarios",
+              url: process.env.URL_ADM + user.userId,
             },
           };
         }),
@@ -32,29 +32,29 @@ const usuariosControllers = {
   //cadastrar
   criar: async (req, res) => {
     try {
-      const { email, senha } = req.body;
+      const { email, password } = req.body;
 
       // cadastrar no banco de dados
       // verificando se o email já existe
       const resultado = await mysql.execute(
-        "SELECT * FROM usuarios WHERE email=?;",
+        "SELECT * FROM users WHERE email=?;",
         [email]
       );
 
       if (resultado.length > 0) {
         return res.status(409).send({
-          messagem: `Email ${email} já cadastrado`,
+          message: `Email ${email} já cadastrado`,
         });
       } else {
-        mysql.execute("INSERT INTO usuarios(email, senha) VALUES (?,?)", [
+        const resultado = await mysql.execute("INSERT INTO users(email, password) VALUES (?,?)", [
           email,
-          bcrypt.generateHash(senha),
+          bcrypt.generateHash(password),
         ]);
 
         const response = {
-          messagem: "Usuario Criado com sucesso",
-          usuarioCriado: {
-            id: resultado.id,
+          message: "Usuario Criado com sucesso",
+          createdUser: {
+            id: resultado.insertId,
             email,
 
             request: {
@@ -73,25 +73,25 @@ const usuariosControllers = {
 
   ler: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { userId } = req.params;
 
       const resultado = await mysql.execute(
-        "SELECT * FROM usuarios WHERE id=?;",
-        [id]
+        "SELECT * FROM users WHERE userId=?;",
+        [userId]
       );
       if (resultado.length == 0) {
         return res.status(404).send({
-          messagem: `Não foi encontrado usuario com esse Id=${id}`,
+          message: `Não foi encontrado usuario com esse Id=${id}`,
         });
       }
       const response = {
-        usuarios: {
-          id: resultado[0].id,
+        users: {
+          userId: resultado[0].userId,
           email: resultado[0].email,
 
           request: {
-            tipo: "Get",
-            descricao: "Retorna o Detalhe do Usuário",
+            type: "Get",
+            descricao: "Retorna todos os usuarios",
             url: process.env.URL_ADM,
           },
         },
@@ -109,25 +109,25 @@ const usuariosControllers = {
  
     
     
-    const { email, senha } = req.body;
-    const { id } = req.params;
+    const { email, password } = req.body;
+    const { userId } = req.params;
     // cadastrar no banco de dados
   
 
     await mysql.execute(
-        `UPDATE usuarios
-   SET email=?, senha=? WHERE id=?`,
-        [email, bcrypt.generateHash(senha), id],)
+        `UPDATE users
+   SET email=?, password=? WHERE userId=?`,
+        [email, bcrypt.generateHash(password), userId],)
      
           const response = {
-            messagem: "Usuário Atualizado com Sucesso",
-            usuarioAtualizado: {
-              id,
+            message: "Usuário Atualizado com Sucesso",
+            upateduser: {
+              userId,
               email,
               request: {
                 tipo: "PUT",
                 descricao: "Retorna o detalhe do usuário",
-                url: process.env.URL_ADM + id,
+                url: process.env.URL_ADM + userId,
               },
             },
           };
@@ -145,24 +145,37 @@ const usuariosControllers = {
    try {
     
   
-    const { id } = req.params;
+    const { userId } = req.params;
+    
+
+    const resultado = await mysql.execute(
+      "SELECT * FROM users WHERE userId=?",
+      [userId],
+    );
+    if (resultado.length == 0) {
+      return res.status(404).send({
+        message: `Não foi encontrado usuário com esse Id= ${userId}`,
+      });
+    }else{
+    
+    
     // cadastrar no banco de dados
     await mysql.execute(
-            `DELETE FROM usuarios
-      WHERE id=?`,
-        [id],)
+            `DELETE FROM users
+      WHERE userId=?`,
+        [userId],)
         
           const response = {
-            messagem: "Usuário Deletado com Sucesso",
+            message: `Usuário Deletado com Sucesso `,
             
           };
 
           res.status(202).send(response);
-       
+        }
         } catch (error) {
           return res.status(500).send({ error: error });
         }
        
         },
       }
-module.exports = usuariosControllers;
+module.exports = usersControllers;
