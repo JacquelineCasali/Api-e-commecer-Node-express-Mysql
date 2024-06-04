@@ -48,7 +48,7 @@ requisição externa
 
 
 Comando SQL para criar a base de dados
-### CREATE DATABASE upload CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+### CREATE DATABASE estoque CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 Sequelize é uma biblioteca Javascript que facilita o gerenciamento do banco de dados SQL
 ### npm install --save sequelize

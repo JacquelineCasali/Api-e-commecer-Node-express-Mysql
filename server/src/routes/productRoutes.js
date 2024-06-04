@@ -15,7 +15,7 @@ const router = express.Router();
  router.post('/',login.obrigatorio,uploadImge.single('image'),productControllers.criar)
  router.get('/',productControllers.listar)
 router.get("/:productId", productControllers.ler);
- router.put("/:productId",login.obrigatorio,uploadImge.single('image'),productControllers.update)
+ router.patch("/:productId",login.obrigatorio,uploadImge.single('image'),productControllers.update)
  router.delete("/:productId",login.obrigatorio,productControllers.delete);
 
 

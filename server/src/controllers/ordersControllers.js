@@ -1,5 +1,6 @@
 const mysql = require("../db/config/config");
-//const mysql= require('../db/models/pedidos').pool
+
+
 const ordersControllers = {
   listar: async (req, res) => {
     try {
@@ -72,7 +73,9 @@ const ordersControllers = {
             request: {
               type: "POST",
               descricao: "Retorna todos os pedidos",
-              url: "http://localhost:3000/pedidos",
+              url: process.env.URL_ADM + "pedidos" ,
+              
+           
             },
           },
         };
@@ -108,7 +111,9 @@ const ordersControllers = {
           request: {
             type: "Get",
             descricao: "Retorna o todos os pedidos",
-            url: "http://localhost:3000/pedidos",
+            url: process.env.URL_ADM + "pedidos" 
+            
+            
           },
         },
       };
@@ -149,7 +154,7 @@ const ordersControllers = {
             request: {
               type: "PUT",
               descricao: "Retorna o detalhe do pedido",
-              url: "http://localhost:3000/pedidos/" + orderId,
+              url:process.env.URL_ADM + "pedidos/" + orderId,
             },
           },
         };
@@ -183,7 +188,7 @@ const ordersControllers = {
         request: {
           type: "POST",
           descricao: "Cadastra um pedido",
-          url: "http://localhost:3000/pedidos",
+          url: process.env.URL_ADM + "pedidos/" ,
           body: {
             productId: "Number",
             quantity: "Number",
@@ -197,5 +202,8 @@ const ordersControllers = {
       return res.status(500).send({ error: error });
     }
   },
+
+
+
 };
 module.exports = ordersControllers;

@@ -35,10 +35,10 @@ https://github.com/JacquelineCasali/Api-e-commecer-Node-express-Mysql
 
 ## Projeto
 - Logar no sistema
-- Cria Usuarios pedido e ou produtos no banco de dados
-- Ler Usuarios pedido e ou produtos
-- Atualizar Usuarios pedido e ou produtos 
-- Excluir Usuarios pedido e ou produtos
+- Cria Usuarios pedido,categorias e ou produtos no banco de dados
+- Ler Usuarios pedido,categorias e ou produtos
+- Atualizar Usuarios pedido,categorias e ou produtos 
+- Excluir Usuarios pedido,categorias e ou produtos
 
 
 ## Bibliotecas Usadas

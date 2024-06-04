@@ -16,20 +16,22 @@ const productControllers = {
 //colocando o filtro por categoria
 //% % busca por qualquer parte da palavra
   
-
+// ORDER BY ordena 
 const query = `
 SELECT *
    FROM products
   WHERE categoryId = ?
     AND (
         name LIKE '%${name}%'
-    );
+    )
+    ORDER BY name
+    ;
 `;
 
 
      
       const resultado = await mysql.execute(query,[categoryId]);
-console.log(resultado)
+//console.log(resultado)
     
 
 
@@ -130,7 +132,7 @@ categoryId:prod.categoryId,
           request: {
             type: "Get",
             descricao: "Retorna o todos do Produto",
-            url: process.env.URL_ADM + "produtos/",
+            url: process.env.URL_ADM + "produtos/" ,
           },
         },
       };
@@ -143,14 +145,14 @@ categoryId:prod.categoryId,
 
   update: async (req, res) => {
     try {
-      const { name, price } = req.body;
+      const { name, price,categoryId } = req.body;
       const { image } = req.file;
       const { productId } = req.params;
       // cadastrar no banco de dados
       await mysql.execute(
         `UPDATE products
-   SET name=?, price=?,image=? WHERE productId=?`,
-        [name, price, image, productId]
+   SET name=?, price=?,image=?,categoryId=? WHERE productId=?`,
+        [name, price, image,categoryId, productId]
       );
 
       const response = {
@@ -160,6 +162,7 @@ categoryId:prod.categoryId,
           name,
           price,
           image: process.env.URL_ADM + image,
+          categoryId,
           request: {
             type: "PUT",
             descricao: "Retorna o detalhe do produto",
